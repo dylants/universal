@@ -8,7 +8,7 @@
     "node": "6.x"
   },
   "scripts": {
-    "build:client": "NODE_ENV=production webpack --config ./webpack.config.js --progress --profile --colors",
+    "build:client": "NODE_ENV=production webpack --config ./webpack.config.production.js --progress --profile --colors",
     "build:server": "./node_modules/.bin/babel -d ./build ./server -s",
     "build": "npm run lint && npm run clean:build && npm run build:server && npm run build:client",
     "clean:build": "rimraf build && rimraf public",
@@ -26,17 +26,24 @@
     "test": "npm run lint && npm run test:mocha"
   },
   "dependencies": {
+    "babel-polyfill": "6.23.0",
     "consolidate": "0.14.5",
     "debug-caller": "2.2.0",
     "express": "4.15.2",
     "handlebars": "4.0.6",
     "react": "15.4.2",
     "react-dom": "15.4.2",
-    "react-router": "3.0.3"
+    "react-redux": "5.0.3",
+    "react-router": "3.0.3",
+    "react-router-redux": "4.0.8",
+    "redux": "3.6.0",
+    "redux-logger": "3.0.0",
+    "redux-thunk": "2.2.0"
   },
   "devDependencies": {
     "babel-cli": "6.24.0",
     "babel-eslint": "7.2.1",
+    "babel-loader": "6.4.1",
     "babel-plugin-transform-strict-mode": "6.22.0",
     "babel-preset-env": "1.2.2",
     "babel-preset-react": "6.23.0",
@@ -44,6 +51,7 @@
     "eslint": "3.18.0",
     "eslint-config-airbnb": "14.1.0",
     "eslint-config-airbnb-base": "11.1.2",
+    "eslint-loader": "1.7.0",
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "4.0.0",
     "eslint-plugin-react": "6.10.3",
@@ -52,6 +60,8 @@
     "nodemon": "1.11.0",
     "rimraf": "2.6.1",
     "sass-lint": "1.10.2",
-    "should": "11.2.1"
+    "should": "11.2.1",
+    "webpack": "2.3.2",
+    "whatwg-fetch": "2.0.3"
   }
 }

@@ -7,6 +7,7 @@ import { match, RouterContext } from 'react-router';
 
 import routes from './routes';
 
+const APP_ROOT = path.join(__dirname, '../');
 const logger = require('./lib/logger')();
 
 const app = express();
@@ -15,6 +16,9 @@ const app = express();
 app.engine('html', consolidate.handlebars);
 app.set('view engine', 'html');
 app.set('views', path.join(__dirname, 'views'));
+
+// serve the static assets (js/css)
+app.use(express.static(path.join(APP_ROOT, 'public')));
 
 app.get('*', (req, res) => {
   logger.log(req.url);
