@@ -1,0 +1,12 @@
+{
+  "ignore": [
+    ".git",
+    "build",
+    "node_modules",
+    "public"
+  ],
+  "verbose": true,
+  "watch": [
+    "app/"
+  ]
+}
