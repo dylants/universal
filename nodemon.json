@@ -7,6 +7,6 @@
   ],
   "verbose": true,
   "watch": [
-    "app/"
+    "app/api"
   ]
 }
