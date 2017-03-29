@@ -3,6 +3,7 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const config = require('./app/config');
 
 const appPath = path.join(__dirname, 'app');
 const assetsPath = path.join(__dirname, 'public');
@@ -21,6 +22,26 @@ function getPlugins() {
 }
 
 function getLoaders() {
+  // https://github.com/webpack/style-loader
+  const styleLoaderConfig = { loader: 'style-loader' };
+  // https://github.com/webpack/css-loader
+  const cssLoaderConfig = { loader: 'css-loader',
+    options: {
+      sourceMap: true,
+      modules: true,
+      importLoaders: 1,
+      localIdentName: config.webpack.localIdentName,
+      minimize: true,
+    },
+  };
+  // https://github.com/jtangelder/sass-loader
+  const sassLoaderConfig = { loader: 'sass-loader',
+    options: {
+      sourceMap: true,
+    },
+  };
+  const sassLoaders = [styleLoaderConfig, cssLoaderConfig, sassLoaderConfig];
+
   return [
     {
       test: /\.js$/,
@@ -37,6 +58,10 @@ function getLoaders() {
           plugins: ['transform-strict-mode'],
         },
       },
+    }, {
+      test: /(\.scss)$/,
+      exclude: /node_modules/,
+      use: sassLoaders,
     }, {
       test: /\.js$/,
       exclude: /node_modules/,

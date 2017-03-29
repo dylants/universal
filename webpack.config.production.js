@@ -3,6 +3,8 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const config = require('./app/config');
 
 const appPath = path.join(__dirname, 'app');
 const assetsPath = path.join(__dirname, 'public');
@@ -20,10 +22,35 @@ function getPlugins() {
       minimize: true,
       sourceMap: true,
     }),
+
+    // https://webpack.github.io/docs/stylesheets.html
+    // https://github.com/webpack/extract-text-webpack-plugin
+    new ExtractTextPlugin('[name].min.css'),
   ];
 }
 
 function getLoaders() {
+  // https://github.com/webpack/css-loader
+  const cssLoaderConfig = { loader: 'css-loader',
+    options: {
+      sourceMap: true,
+      modules: true,
+      importLoaders: 1,
+      localIdentName: config.webpack.localIdentName,
+      minimize: true,
+    },
+  };
+  // https://github.com/jtangelder/sass-loader
+  const sassLoaderConfig = { loader: 'sass-loader',
+    options: {
+      sourceMap: true,
+    },
+  };
+  // https://github.com/webpack/extract-text-webpack-plugin
+  const sassLoaders = ExtractTextPlugin.extract({
+    use: [cssLoaderConfig, sassLoaderConfig],
+  });
+
   return [
     {
       test: /\.js$/,
@@ -40,6 +67,10 @@ function getLoaders() {
           plugins: ['transform-strict-mode'],
         },
       },
+    }, {
+      test: /(\.scss)$/,
+      exclude: /node_modules/,
+      use: sassLoaders,
     }, {
       test: /\.js$/,
       exclude: /node_modules/,

@@ -7,6 +7,11 @@
   ],
   "verbose": true,
   "watch": [
-    "app/api"
+    "app/api",
+    "app/config",
+    "app/lib",
+    "app/views",
+    "app/express.js",
+    "app/server.js"
   ]
 }
