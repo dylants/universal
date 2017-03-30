@@ -1,4 +1,7 @@
+import fetch from 'isomorphic-fetch';
 import { push } from 'react-router-redux';
+
+import config from '../config';
 
 export const FETCH_DEFAULT_OPTIONS = {
   headers: {
@@ -34,4 +37,20 @@ export function handleHttpError(dispatch, error, errorAction, ...args) {
   } else {
     dispatch(errorAction(error, ...args));
   }
+}
+
+export function localRequest(uri, options) {
+  let url = uri;
+
+  /*
+   * When running this code on the client (browser), we use a version
+   * of fetch that allows relative URLs. However, when running on the
+   * server, this uses `node-fetch` which requires a fully qualified
+   * URL. Use `localhost` to at least not leave the machine.
+   */
+  if (typeof window === 'undefined') {
+    url = `http://localhost:${config.port}${uri}`;
+  }
+
+  return fetch(url, options);
 }

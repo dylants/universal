@@ -1,16 +1,30 @@
-import should from 'should';
-import fetchMock from 'fetch-mock';
 import configureMockStore from 'redux-mock-store';
+import proxyquire from 'proxyquire';
+import should from 'should';
 import thunk from 'redux-thunk';
-import * as pageActions from '../../../app/actions/page.actions';
 import * as types from '../../../app/constants/action-types';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
+const MODULE_PATH = '../../../app/actions/page.actions';
+
+function mockActions(localRequest) {
+  return proxyquire(MODULE_PATH, {
+    '../lib/http': {
+      localRequest,
+    },
+  });
+}
+
 describe('page actions', () => {
+  let pageActions;
+
+  beforeEach(() => {
+    pageActions = require(MODULE_PATH);
+  });
+
   describe('loadPage1Data', () => {
-    const PAGE_DATA_URL = 'http://localhost:3000/api/page/1';
     let store;
 
     beforeEach(() => {
@@ -19,16 +33,16 @@ describe('page actions', () => {
       });
     });
 
-    afterEach(() => {
-      fetchMock.restore();
-    });
-
     describe('when the status is 200', () => {
       beforeEach(() => {
-        fetchMock.mock(PAGE_DATA_URL, {
-          status: 200,
-          body: { data: { page: 1 } },
-        });
+        pageActions = mockActions(() =>
+          new Promise(resolve => resolve({
+            status: 200,
+            json: () => ({
+              data: { page: 1 },
+            }),
+          })),
+        );
       });
 
       describe('when data does not already exist', () => {
@@ -75,9 +89,11 @@ describe('page actions', () => {
 
     describe('when the status is 500', () => {
       beforeEach(() => {
-        fetchMock.mock(PAGE_DATA_URL, {
-          status: 500,
-        });
+        pageActions = mockActions(() =>
+          new Promise(resolve => resolve({
+            status: 500,
+          })),
+        );
       });
 
       it('should dispatch properly', (done) => {

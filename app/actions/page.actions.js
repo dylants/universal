@@ -1,9 +1,8 @@
-import fetch from 'isomorphic-fetch';
-
 import {
   FETCH_DEFAULT_OPTIONS,
   checkHttpStatus,
   handleHttpError,
+  localRequest,
 } from '../lib/http';
 import {
   LOADING_PAGE_1_DATA,
@@ -50,13 +49,12 @@ export function loadPage1Data() {
 
     dispatch(loadingPage1Data());
 
-    const uri = 'http://localhost:3000/api/page/1';
+    const uri = '/api/page/1';
     const options = Object.assign({}, FETCH_DEFAULT_OPTIONS, {
       method: 'GET',
     });
 
-    return fetch(uri, options)
-      .then(checkHttpStatus)
+    return localRequest(uri, options)
       .then(checkHttpStatus)
       .then(response => response.json())
       .then(response => dispatch(page1DataLoaded(response.data)))

@@ -1,10 +1,15 @@
+import proxyquire from 'proxyquire';
 import should from 'should';
+
+import config from '../../../app/config';
+
+const MODULE_PATH = '../../../app/lib/http';
 
 describe('Http library', () => {
   let httpLib;
 
   beforeEach(() => {
-    httpLib = require('../../../app/lib/http');
+    httpLib = require(MODULE_PATH);
   });
 
   it('should exist', () => {
@@ -102,6 +107,47 @@ describe('Http library', () => {
             z: undefined,
           });
         });
+      });
+    });
+  });
+
+  describe('localRequest', () => {
+    let url;
+    let options;
+
+    beforeEach(() => {
+      httpLib = proxyquire(MODULE_PATH, {
+        'isomorphic-fetch': (_url, _options) => {
+          url = _url;
+          options = _options;
+        },
+      });
+    });
+
+    describe('when the window does not exist (server)', () => {
+      it('should work', () => {
+        httpLib.localRequest('/a/b', { a: 1 });
+        should(url).equal(`http://localhost:${config.port}/a/b`);
+        should(options).deepEqual({ a: 1 });
+      });
+    });
+
+    describe('when the window does exist (client)', () => {
+      let disableJSDomHook;
+
+      beforeEach(() => {
+        // this creates a 'window' which mocks being in the client
+        disableJSDomHook = require('jsdom-global')();
+      });
+
+      afterEach(() => {
+        disableJSDomHook();
+      });
+
+      it('should work', () => {
+        httpLib.localRequest('/a/b', { a: 1 });
+        should(url).equal('/a/b');
+        should(options).deepEqual({ a: 1 });
       });
     });
   });
