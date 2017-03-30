@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 import {
   FETCH_DEFAULT_OPTIONS,
   checkHttpStatus,
@@ -7,6 +9,7 @@ import {
   LOADING_PAGE_1_DATA,
   LOADING_PAGE_1_DATA_ERROR,
   PAGE_1_DATA_LOADED,
+  PAGE_1_DATA_ALREADY_LOADED,
 } from '../constants/action-types';
 
 function loadingPage1Data() {
@@ -29,16 +32,30 @@ function page1DataLoaded(data) {
   };
 }
 
+function page1DataAlreadyLoaded() {
+  return {
+    type: PAGE_1_DATA_ALREADY_LOADED,
+  };
+}
+
 export function loadPage1Data() {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const { page1State } = getState();
+    const { data } = page1State;
+    if (data) {
+      return new Promise(resolve =>
+        resolve(dispatch(page1DataAlreadyLoaded())),
+      );
+    }
+
     dispatch(loadingPage1Data());
 
-    const uri = '/api/page/1';
+    const uri = 'http://localhost:3000/api/page/1';
     const options = Object.assign({}, FETCH_DEFAULT_OPTIONS, {
       method: 'GET',
     });
 
-    return fetch(uri, options) // eslint-disable-line
+    return fetch(uri, options)
       .then(checkHttpStatus)
       .then(checkHttpStatus)
       .then(response => response.json())

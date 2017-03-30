@@ -1,7 +1,9 @@
 export function loadPage1Data(req, res) {
-  res.send({
-    data: {
-      pageNumber: 1,
-    },
-  });
+  setTimeout(() => {
+    res.send({
+      data: {
+        pageNumber: 1,
+      },
+    });
+  }, 1000);
 }

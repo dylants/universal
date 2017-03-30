@@ -1,21 +1,24 @@
+/* global window, document */
+
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
 import configureStore from './store/configureStore';
-import routes from './routes';
+import { createRoutes } from './routes';
 
-const store = configureStore(undefined, browserHistory);
+const initialState = window.__REDUX_STATE__;
+delete window.__REDUX_STATE__;
 
+const store = configureStore(initialState, browserHistory);
 const history = syncHistoryWithStore(browserHistory, store);
+const routes = createRoutes(history);
 
 render(
   <Provider store={store}>
-    <Router history={history}>
-      {routes}
-    </Router>
+    {routes}
   </Provider>,
-  document.getElementById('app'), // eslint-disable-line no-undef
+  document.getElementById('app'),
 );

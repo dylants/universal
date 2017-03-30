@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import { loadPage1Data } from '../../actions/page.actions';
 
 class Page1 extends Component {
-  componentWillMount() {
+  static fetchData({ store }) {
+    return store.dispatch(loadPage1Data());
+  }
+
+  componentDidMount() {
     this.props.loadPage1Data();
   }
 
@@ -21,7 +25,7 @@ class Page1 extends Component {
       renderData = (
         <p>{error}</p>
       );
-    } else if (data) {
+    } else {
       const { pageNumber } = data;
       renderData = (
         <p>Page Number: {pageNumber}</p>

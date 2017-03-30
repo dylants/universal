@@ -6,7 +6,7 @@ import {
 } from '../constants/action-types';
 
 const initialState = {
-  loading: false,
+  loading: true,
   error: null,
   data: null,
 };

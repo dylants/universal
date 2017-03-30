@@ -10,11 +10,13 @@ const mockStore = configureMockStore(middlewares);
 
 describe('page actions', () => {
   describe('loadPage1Data', () => {
-    const PAGE_DATA_URL = '/api/page/1';
+    const PAGE_DATA_URL = 'http://localhost:3000/api/page/1';
     let store;
 
     beforeEach(() => {
-      store = mockStore();
+      store = mockStore({
+        page1State: {},
+      });
     });
 
     afterEach(() => {
@@ -29,20 +31,45 @@ describe('page actions', () => {
         });
       });
 
-      it('should dispatch properly', (done) => {
-        store.dispatch(pageActions.loadPage1Data())
-        .then(() => {
-          const actions = store.getActions();
-          should(actions.length).equal(2);
-          should(actions).deepEqual([{
-            type: types.LOADING_PAGE_1_DATA,
-          }, {
-            type: types.PAGE_1_DATA_LOADED,
-            data: { page: 1 },
-          }]);
-        })
-        .then(done)
-        .catch(done);
+      describe('when data does not already exist', () => {
+        it('should dispatch properly', (done) => {
+          store.dispatch(pageActions.loadPage1Data())
+          .then(() => {
+            const actions = store.getActions();
+            should(actions.length).equal(2);
+            should(actions).deepEqual([{
+              type: types.LOADING_PAGE_1_DATA,
+            }, {
+              type: types.PAGE_1_DATA_LOADED,
+              data: { page: 1 },
+            }]);
+          })
+          .then(done)
+          .catch(done);
+        });
+      });
+
+      describe('when data already exists', () => {
+        beforeEach(() => {
+          store = mockStore({
+            page1State: {
+              data: { a: 1 },
+            },
+          });
+        });
+
+        it('should dispatch properly', (done) => {
+          store.dispatch(pageActions.loadPage1Data())
+          .then(() => {
+            const actions = store.getActions();
+            should(actions.length).equal(1);
+            should(actions).deepEqual([{
+              type: types.PAGE_1_DATA_ALREADY_LOADED,
+            }]);
+          })
+          .then(done)
+          .catch(done);
+        });
       });
     });
 

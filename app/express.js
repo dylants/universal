@@ -4,9 +4,6 @@ import consolidate from 'consolidate';
 import express from 'express';
 import glob from 'glob';
 import path from 'path';
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { match, RouterContext } from 'react-router';
 
 import config from './config';
 
@@ -14,7 +11,6 @@ const APP_ROOT = path.join(__dirname, '../');
 const API_ROOT = path.join(__dirname, 'api');
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-const logger = require('./lib/logger')();
 
 const app = express();
 
@@ -100,45 +96,13 @@ if (IS_PRODUCTION) {
   app.use(express.static(path.join(APP_ROOT, 'public')));
 }
 
-/* ------------------------------------------ *
- * Load UI routes (React containers/components)
- * ------------------------------------------ */
-
-// this must be imported here after the above code has run
-// (so that certain hooks are allowed to be put in place)
-const routes = require('./routes').default;
+// this must be imported at this point to avoid problems
+const serverRender = require('./server-render').default;
 
 /*
  * THIS MUST BE THE LAST ROUTE IN THE CONFIG
  * This renders any other request according to the match rules below
  */
-app.get('*', (req, res) => {
-  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
-    if (error) {
-      logger.error('express: error rendering route, req.url: %s', req.url);
-      logger.error(error);
-      return res.status(500).send(error.message);
-    }
-
-    if (redirectLocation) {
-      return res.redirect(302, redirectLocation.pathname + redirectLocation.search);
-    }
-
-    if (!renderProps) {
-      return res.status(404).end();
-    }
-
-    const webpackBundleName = IS_DEVELOPMENT ? 'main.js' : 'main.min.js';
-    // the css file is only available in production
-    const stylesBundleName = IS_PRODUCTION && 'main.min.css';
-
-    // with no errors and no redirects, render the page
-    return res.render('index', {
-      webpackBundleName,
-      stylesBundleName,
-      htmlContent: renderToString(<RouterContext {...renderProps} />),
-    });
-  });
-});
+app.get('*', serverRender);
 
 module.exports = app;

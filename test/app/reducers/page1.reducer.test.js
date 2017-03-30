@@ -12,7 +12,7 @@ describe('the page1 reducer', () => {
 
   it('should have the correct initial state', () => {
     should(reducer(undefined, {})).deepEqual({
-      loading: false,
+      loading: true,
       error: null,
       data: null,
     });
@@ -21,7 +21,7 @@ describe('the page1 reducer', () => {
   describe('in the initial state', () => {
     beforeEach(() => {
       state = {
-        loading: false,
+        loading: true,
         error: null,
         data: null,
       };
