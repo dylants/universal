@@ -1,5 +1,8 @@
+import bodyParser from 'body-parser';
+import compression from 'compression';
 import consolidate from 'consolidate';
 import express from 'express';
+import glob from 'glob';
 import path from 'path';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
@@ -8,17 +11,49 @@ import { match, RouterContext } from 'react-router';
 import config from './config';
 
 const APP_ROOT = path.join(__dirname, '../');
+const API_ROOT = path.join(__dirname, 'api');
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const logger = require('./lib/logger')();
 
 const app = express();
 
+app.use(compression());
+
+/* ------------------------------------------ *
+ * API configuration
+ * ------------------------------------------ */
+
+app.use(bodyParser.json());
+
+// load the server controllers (via the routes)
+const ROUTE_PATH = path.join(API_ROOT, 'routes');
+const router = new express.Router();
+glob(`${ROUTE_PATH}/**/*.js`, (err, files) => {
+  files.map(file => require(file)(router));
+});
+app.use(router);
+
+// if at this point we don't have a route match for /api, return 404
+app.all('/api/*', (req, res) => {
+  res.status(404).send({
+    error: `route not found: ${req.url}`,
+  });
+});
+
+/* ------------------------------------------ *
+ * Rendering configuration
+ * ------------------------------------------ */
+
 // use handlebars as the html engine renderer
 app.engine('html', consolidate.handlebars);
 app.set('view engine', 'html');
 // set this location explicitly (for both development and production)
 app.set('views', path.join(APP_ROOT, 'app', 'views'));
+
+/* ------------------------------------------ *
+ * Development environment configuration
+ * ------------------------------------------ */
 
 if (IS_DEVELOPMENT) {
   /*
@@ -49,6 +84,10 @@ if (IS_DEVELOPMENT) {
   app.use(webpackHotMiddleware(compiler));
 }
 
+/* ------------------------------------------ *
+ * Production environment configuration
+ * ------------------------------------------ */
+
 if (IS_PRODUCTION) {
   /*
    * Our components import styles (scss files) even after babel compilation.
@@ -60,6 +99,10 @@ if (IS_PRODUCTION) {
   // serve the static assets (js/css)
   app.use(express.static(path.join(APP_ROOT, 'public')));
 }
+
+/* ------------------------------------------ *
+ * Load UI routes (React containers/components)
+ * ------------------------------------------ */
 
 // this must be imported here after the above code has run
 // (so that certain hooks are allowed to be put in place)

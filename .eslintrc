@@ -1,9 +1,13 @@
 parser: "babel-eslint"
 extends: "airbnb"
 rules:
+  # this rule causes problems with app init
+  import/no-dynamic-require: 0
   # https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
   # this rule causes problems with webpack config
   import/no-extraneous-dependencies: [2, {}]
+  # this rule causes problems with actions (single action to export)
+  import/prefer-default-export: 0
   # this rule causes problems with initialization
   global-require: 0
   # https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-filename-extension.md

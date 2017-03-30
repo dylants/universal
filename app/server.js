@@ -1,6 +1,9 @@
 // initialize the configuration first!
 require('./config/init')();
 
+// necessary for certain advanced functions
+require('babel-polyfill');
+
 const logger = require('./lib/logger')();
 
 // load and output the configuration
