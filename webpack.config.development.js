@@ -77,10 +77,6 @@ function getEntry() {
   // babel polyfill to support older browsers
   entry.push('babel-polyfill');
 
-  // https://github.com/github/fetch
-  // fetch polyfill to support older browsers
-  entry.push('whatwg-fetch');
-
   // https://github.com/glenjamin/webpack-hot-middleware#config
   entry.push('webpack-hot-middleware/client?reload=true');
 

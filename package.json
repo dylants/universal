@@ -30,13 +30,14 @@
     "body-parser": "1.17.1",
     "compression": "1.6.2",
     "consolidate": "0.14.5",
+    "css-modules-require-hook": "4.0.6",
     "debug-caller": "2.2.0",
     "express": "4.15.2",
     "glob": "7.1.1",
     "handlebars": "4.0.6",
-    "ignore-styles": "5.0.1",
     "isomorphic-fetch": "2.2.1",
     "lodash": "4.17.4",
+    "node-sass": "4.5.2",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-redux": "5.0.3",
@@ -55,7 +56,6 @@
     "babel-preset-react": "6.23.0",
     "babel-preset-stage-2": "6.22.0",
     "css-loader": "0.27.3",
-    "css-modules-require-hook": "4.0.6",
     "eslint": "3.18.0",
     "eslint-config-airbnb": "14.1.0",
     "eslint-config-airbnb-base": "11.1.2",
@@ -68,7 +68,6 @@
     "jsdom": "9.12.0",
     "jsdom-global": "2.1.1",
     "mocha": "3.2.0",
-    "node-sass": "4.5.1",
     "nodemon": "1.11.0",
     "normalize.css": "6.0.0",
     "proxyquire": "1.7.11",
@@ -80,7 +79,6 @@
     "style-loader": "0.16.1",
     "webpack": "2.3.2",
     "webpack-dev-middleware": "1.10.1",
-    "webpack-hot-middleware": "2.17.1",
-    "whatwg-fetch": "2.0.3"
+    "webpack-hot-middleware": "2.17.1"
   }
 }

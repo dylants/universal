@@ -1,7 +1,7 @@
 const config = {
   port: process.env.PORT || 3000,
   webpack: {
-    localIdentName: '[local]___[hash:base64:5]',
+    localIdentName: '[name]__[local]', // https://github.com/webpack/loader-utils#interpolatename
   },
 };
 

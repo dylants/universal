@@ -86,10 +86,6 @@ function getEntry() {
   // babel polyfill to support older browsers
   entry.push('babel-polyfill');
 
-  // https://github.com/github/fetch
-  // fetch polyfill to support older browsers
-  entry.push('whatwg-fetch');
-
   // our client application
   entry.push(path.join(appPath, 'client.js'));
 
