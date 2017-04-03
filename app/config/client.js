@@ -6,8 +6,8 @@ import { Provider } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 
-import configureStore from './store/configureStore';
-import { createRoutes } from './routes';
+import configureStore from './store';
+import { createRoutes } from '../routes/react-routes';
 
 const initialState = window.__REDUX_STATE__;
 delete window.__REDUX_STATE__;

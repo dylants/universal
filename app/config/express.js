@@ -2,42 +2,20 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import consolidate from 'consolidate';
 import express from 'express';
-import glob from 'glob';
 import hook from 'css-modules-require-hook';
 import path from 'path';
 import sass from 'node-sass';
 
-import config from './config';
+import config from '../config';
 
-const APP_ROOT = path.join(__dirname, '../');
-const API_ROOT = path.join(__dirname, 'api');
+const APP_ROOT = path.join(__dirname, '../../');
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 const app = express();
 
 app.use(compression());
-
-/* ------------------------------------------ *
- * API configuration
- * ------------------------------------------ */
-
 app.use(bodyParser.json());
-
-// load the server controllers (via the routes)
-const ROUTE_PATH = path.join(API_ROOT, 'routes');
-const router = new express.Router();
-glob(`${ROUTE_PATH}/**/*.js`, (err, files) => {
-  files.map(file => require(file)(router));
-});
-app.use(router);
-
-// if at this point we don't have a route match for /api, return 404
-app.all('/api/*', (req, res) => {
-  res.status(404).send({
-    error: `route not found: ${req.url}`,
-  });
-});
 
 /* ------------------------------------------ *
  * Rendering configuration
@@ -69,7 +47,7 @@ if (IS_DEVELOPMENT) {
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
-  const webpackConfig = require('../webpack.config.development');
+  const webpackConfig = require('../../webpack.config.development');
 
   // configure webpack middleware
   const compiler = webpack(webpackConfig);
@@ -89,13 +67,14 @@ if (IS_PRODUCTION) {
   app.use(express.static(path.join(APP_ROOT, 'public')));
 }
 
-// this must be imported at this point to avoid problems
-const serverRender = require('./server-render').default;
+/* ------------------------------------------ *
+ * Express route configuration
+ * ------------------------------------------ */
 
-/*
- * THIS MUST BE THE LAST ROUTE IN THE CONFIG
- * This renders any other request according to the match rules below
- */
-app.get('*', serverRender);
+const router = new express.Router();
+require('../routes/express-routes')(router);
+
+app.use(router);
+
 
 module.exports = app;

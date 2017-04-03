@@ -7,12 +7,10 @@
   ],
   "verbose": true,
   "watch": [
-    "app/api",
     "app/config",
+    "app/controllers",
     "app/lib",
-    "app/views",
-    "app/express.js",
-    "app/server-render.js",
-    "app/server.js"
+    "app/routes",
+    "app/views"
   ]
 }

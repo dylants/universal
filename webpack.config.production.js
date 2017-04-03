@@ -87,7 +87,7 @@ function getEntry() {
   entry.push('babel-polyfill');
 
   // our client application
-  entry.push(path.join(appPath, 'client.js'));
+  entry.push(path.join(appPath, 'config/client.js'));
 
   return entry;
 }

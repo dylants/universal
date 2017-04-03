@@ -81,7 +81,7 @@ function getEntry() {
   entry.push('webpack-hot-middleware/client?reload=true');
 
   // our client application
-  entry.push(path.join(appPath, 'client.js'));
+  entry.push(path.join(appPath, 'config/client.js'));
 
   return entry;
 }

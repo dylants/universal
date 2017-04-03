@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, Router } from 'react-router';
 
-import App from './containers/app/app.container';
-import Home from './containers/home/home.container';
-import Page1 from './containers/page1/page1.container';
-import Page2 from './containers/page2/page2.container';
+import App from '../containers/app/app.container';
+import Home from '../containers/home/home.container';
+import Page1 from '../containers/page1/page1.container';
+import Page2 from '../containers/page2/page2.container';
 
 export function createRoutes(history) {
   return (

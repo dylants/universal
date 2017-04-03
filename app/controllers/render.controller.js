@@ -4,14 +4,14 @@ import { createMemoryHistory, match, RouterContext } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 
-import configureStore from './store/configureStore';
-import { createRoutes } from './routes';
+import configureStore from '../config/store';
+import { createRoutes } from '../routes/react-routes';
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-const logger = require('./lib/logger')();
+const logger = require('../lib/logger')();
 
-export default function serverRender(req, res, next) {
+export default function render(req, res, next) {
   const history = createMemoryHistory(req.url);
   const store = configureStore(undefined, history);
   const syncedHistory = syncHistoryWithStore(history, store);
@@ -19,7 +19,7 @@ export default function serverRender(req, res, next) {
 
   match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
     if (error) {
-      logger.error('serverRender: error rendering route, req.url: %s', req.url);
+      logger.error('render: error rendering route, req.url: %s', req.url);
       logger.error(error);
       return res.status(500).send(error.message);
     }
