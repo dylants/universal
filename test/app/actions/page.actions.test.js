@@ -111,4 +111,23 @@ describe('page actions', () => {
       });
     });
   });
+
+  describe('dispatchToPage1', () => {
+    let store;
+
+    beforeEach(() => {
+      store = mockStore();
+    });
+
+    it('should dispatch properly', (done) => {
+      store.dispatch(pageActions.dispatchToPage1())
+      .then(() => {
+        const actions = store.getActions();
+        should(actions.length).equal(1);
+        should(actions[0].payload.args).deepEqual(['/page1']);
+      })
+      .then(done)
+      .catch(done);
+    });
+  });
 });

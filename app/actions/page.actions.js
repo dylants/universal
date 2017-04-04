@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux';
+
 import {
   FETCH_DEFAULT_OPTIONS,
   checkHttpStatus,
@@ -42,9 +44,7 @@ export function loadPage1Data() {
     const { page1State } = getState();
     const { data } = page1State;
     if (data) {
-      return new Promise(resolve =>
-        resolve(dispatch(page1DataAlreadyLoaded())),
-      );
+      return Promise.resolve(dispatch(page1DataAlreadyLoaded()));
     }
 
     dispatch(loadingPage1Data());
@@ -60,4 +60,8 @@ export function loadPage1Data() {
       .then(response => dispatch(page1DataLoaded(response.data)))
       .catch(error => handleHttpError(dispatch, error, loadingPage1DataError));
   };
+}
+
+export function dispatchToPage1() {
+  return dispatch => Promise.resolve(dispatch(push('/page1')));
 }

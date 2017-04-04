@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { loadPage1Data } from '../../actions/page.actions';
 
+import style from './page1.container.scss';
+
 class Page1 extends Component {
   static fetchData({ store }) {
     return store.dispatch(loadPage1Data());
@@ -34,7 +36,7 @@ class Page1 extends Component {
 
     return (
       <div>
-        <h1>Page1</h1>
+        <h1 className={style.heading}>Page1</h1>
         {renderData}
       </div>
     );
