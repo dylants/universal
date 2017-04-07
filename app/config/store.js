@@ -24,7 +24,15 @@ function configureStore(initialState, history) {
     logger,
   );
 
-  return createStore(rootReducer, initialState, middleware);
+  const store = createStore(rootReducer, initialState, middleware);
+
+  if (module.hot) {
+    module.hot.accept('../reducers/root.reducer', () => {
+      store.replaceReducer(rootReducer);
+    });
+  }
+
+  return store;
 }
 
 export default configureStore;

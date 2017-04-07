@@ -55,11 +55,13 @@ export default function render(req, res, next) {
         );
 
         const webpackBundleName = IS_DEVELOPMENT ? 'main.js' : 'main.min.js';
+        const webpackVendorBundleName = IS_DEVELOPMENT ? 'vendor.js' : 'vendor.min.js';
         // the css file is only available in production
         const stylesBundleName = IS_PRODUCTION && 'main.min.css';
 
         return res.render('index', {
           webpackBundleName,
+          webpackVendorBundleName,
           stylesBundleName,
           reduxState,
           htmlContent,

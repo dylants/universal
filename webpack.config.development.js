@@ -11,12 +11,17 @@ const publicPath = '/';
 
 function getPlugins() {
   return [
-    // http://webpack.github.io/docs/list-of-plugins.html#noerrorsplugin
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
 
-    // http://webpack.github.io/docs/list-of-plugins.html#hotmodulereplacementplugin
+    // https://webpack.js.org/guides/code-splitting-libraries/#implicit-common-vendor-chunk
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: module => module.context && module.context.indexOf('node_modules') !== -1,
+    }),
+
+    // https://github.com/glenjamin/webpack-hot-middleware
     new webpack.HotModuleReplacementPlugin(),
   ];
 }
@@ -55,7 +60,7 @@ function getLoaders() {
           // Doing so allows us to use Webpack 2's import system instead.
           // https://webpack.js.org/guides/migrating/
           presets: [['env', { modules: false }], 'stage-2', 'react'],
-          plugins: ['transform-strict-mode'],
+          plugins: ['transform-strict-mode', 'react-hot-loader/babel'],
         },
       },
     }, {
@@ -77,7 +82,10 @@ function getEntry() {
   // babel polyfill to support older browsers
   entry.push('babel-polyfill');
 
-  // https://github.com/glenjamin/webpack-hot-middleware#config
+  // https://github.com/gaearon/react-hot-loader/tree/master/docs#migration-to-30
+  entry.push('react-hot-loader/patch');
+
+  // https://github.com/glenjamin/webpack-hot-middleware
   entry.push('webpack-hot-middleware/client?reload=true');
 
   // our client application
@@ -95,13 +103,11 @@ function getOutput() {
 }
 
 module.exports = {
-  // necessary per https://webpack.github.io/docs/testing.html#compile-and-test
+  cache: true,
+
   target: 'web',
 
-  // more info: https://webpack.github.io/docs/build-performance.html#sourcemaps
-  // more info: https://webpack.github.io/docs/configuration.html#devtool
-  // for whatever reason, chrome stopped working for everything except 'source-map'
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
 
   resolve: {
     modules: [

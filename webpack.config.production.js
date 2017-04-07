@@ -12,18 +12,21 @@ const publicPath = '/';
 
 function getPlugins() {
   return [
-    // http://webpack.github.io/docs/list-of-plugins.html#noerrorsplugin
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
 
-    // http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       sourceMap: true,
     }),
 
-    // https://webpack.github.io/docs/stylesheets.html
+    // https://webpack.js.org/guides/code-splitting-libraries/#implicit-common-vendor-chunk
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: module => module.context && module.context.indexOf('node_modules') !== -1,
+    }),
+
     // https://github.com/webpack/extract-text-webpack-plugin
     new ExtractTextPlugin('[name].min.css'),
   ];
@@ -57,15 +60,6 @@ function getLoaders() {
       exclude: /node_modules/,
       use: {
         loader: 'babel-loader',
-        options: {
-          // Don't use .babelrc. Use the specified config below with webpack
-          babelrc: false,
-          // This disables babel's transformation of ES2015 module syntax.
-          // Doing so allows us to use Webpack 2's import system instead.
-          // https://webpack.js.org/guides/migrating/
-          presets: [['env', { modules: false }], 'stage-2', 'react'],
-          plugins: ['transform-strict-mode'],
-        },
       },
     }, {
       test: /(\.scss)$/,
@@ -101,12 +95,8 @@ function getOutput() {
 }
 
 module.exports = {
-  // necessary per https://webpack.github.io/docs/testing.html#compile-and-test
   target: 'web',
 
-  // more info: https://webpack.github.io/docs/build-performance.html#sourcemaps
-  // more info: https://webpack.github.io/docs/configuration.html#devtool
-  // for whatever reason, chrome stopped working for everything except 'source-map'
   devtool: 'source-map',
 
   resolve: {

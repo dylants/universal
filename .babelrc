@@ -1,4 +1,4 @@
 {
   "presets": ["env", "stage-2", "react"],
-  "plugins": ["transform-strict-mode"]
+  "plugins": ["transform-strict-mode", "react-hot-loader/babel"]
 }

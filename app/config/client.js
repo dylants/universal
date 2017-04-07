@@ -1,7 +1,7 @@
 /* global window, document */
 
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -14,11 +14,20 @@ delete window.__REDUX_STATE__;
 
 const store = configureStore(initialState, browserHistory);
 const history = syncHistoryWithStore(browserHistory, store);
-const routes = createRoutes(history);
 
-render(
-  <Provider store={store}>
-    {routes}
-  </Provider>,
-  document.getElementById('app'),
-);
+function render(routes) {
+  ReactDOM.render(
+    <Provider store={store}>
+      {routes}
+    </Provider>,
+    document.getElementById('app'),
+  );
+}
+
+render(createRoutes(history));
+
+if (module.hot) {
+  module.hot.accept('../routes/react-routes', () => {
+    render(createRoutes(history));
+  });
+}
