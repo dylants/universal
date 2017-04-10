@@ -16,7 +16,7 @@ class Page1 extends Component {
   }
 
   render() {
-    const { loading, error, data } = this.props.page1State;
+    const { loading, error, data, dataAlreadyLoaded } = this.props.page1State;
 
     let renderData;
     if (loading) {
@@ -38,6 +38,7 @@ class Page1 extends Component {
       <div>
         <h1 className={style.heading}>Page1</h1>
         {renderData}
+        <div>Data already loaded: {dataAlreadyLoaded}</div>
       </div>
     );
   }
@@ -51,6 +52,7 @@ Page1.propTypes = {
     data: PropTypes.shape({
       pageNumber: PropTypes.number.isRequired,
     }),
+    dataAlreadyLoaded: PropTypes.string.isRequired,
   }).isRequired,
 };
 
