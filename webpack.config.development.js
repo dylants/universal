@@ -1,8 +1,10 @@
 // We need to 'use strict' here because this file isn't compiled with babel
 'use strict'; // eslint-disable-line strict, lines-around-directive
 
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -15,6 +17,14 @@ const publicPath = '/';
 
 function getPlugins() {
   return [
+    // https://github.com/th0r/webpack-bundle-analyzer
+    // new BundleAnalyzerPlugin({
+    //   openAnalyzer: false,
+    // }),
+
+    // https://github.com/lodash/lodash-webpack-plugin
+    new LodashModuleReplacementPlugin(),
+
     // https://github.com/jantimon/html-webpack-plugin
     new HtmlWebpackPlugin({
       alwaysWriteToDisk: true,
@@ -84,11 +94,12 @@ function getLoaders() {
         options: {
           // Don't use .babelrc. Use the specified config below with webpack
           babelrc: false,
-          // This disables babel's transformation of ES2015 module syntax.
+          // { modules: false } disables babel's transformation of ES module syntax.
           // Doing so allows us to use Webpack 2's import system instead.
           // https://webpack.js.org/guides/migrating/
           presets: [['env', { modules: false }], 'stage-2', 'react'],
-          plugins: ['transform-strict-mode', 'react-hot-loader/babel'],
+          // in addition to the plugins normally used, include hot loader here as well
+          plugins: ['transform-strict-mode', 'lodash', 'react-hot-loader/babel'],
         },
       },
     }, {

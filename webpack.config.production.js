@@ -3,6 +3,7 @@
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -15,6 +16,9 @@ const publicPath = '/';
 
 function getPlugins() {
   return [
+    // https://github.com/lodash/lodash-webpack-plugin
+    new LodashModuleReplacementPlugin(),
+
     // https://github.com/jantimon/html-webpack-plugin
     new HtmlWebpackPlugin({
       // write the file to the build path (for server side rendering)
@@ -81,15 +85,20 @@ function getLoaders() {
       exclude: /node_modules/,
       use: {
         loader: 'babel-loader',
+        options: {
+          // Don't use .babelrc. Use the specified config below with webpack
+          babelrc: false,
+          // { modules: false } disables babel's transformation of ES module syntax.
+          // Doing so allows us to use Webpack 2's import system instead.
+          // https://webpack.js.org/guides/migrating/
+          presets: [['env', { modules: false }], 'stage-2', 'react'],
+          plugins: ['transform-strict-mode', 'lodash'],
+        },
       },
     }, {
       test: /(\.scss)$/,
       exclude: /node_modules/,
       use: sassLoaders,
-    }, {
-      test: /\.js$/,
-      exclude: /node_modules/,
-      use: 'eslint-loader',
     },
   ];
 }
