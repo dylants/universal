@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { renderRoutes } from 'react-router-config';
 
 import Header from '../../components/header/header.component';

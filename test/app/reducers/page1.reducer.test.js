@@ -15,6 +15,7 @@ describe('the page1 reducer', () => {
       loading: true,
       error: null,
       data: null,
+      dataAlreadyLoaded: 'no',
     });
   });
 
@@ -24,6 +25,7 @@ describe('the page1 reducer', () => {
         loading: true,
         error: null,
         data: null,
+        dataAlreadyLoaded: 'no',
       };
     });
 
@@ -36,6 +38,7 @@ describe('the page1 reducer', () => {
         loading: true,
         error: null,
         data: null,
+        dataAlreadyLoaded: 'no',
       });
     });
   });
@@ -46,6 +49,7 @@ describe('the page1 reducer', () => {
         loading: true,
         error: null,
         data: null,
+        dataAlreadyLoaded: 'no',
       };
     });
 
@@ -59,6 +63,7 @@ describe('the page1 reducer', () => {
         loading: false,
         error: 'bad',
         data: null,
+        dataAlreadyLoaded: 'no',
       });
     });
 
@@ -72,6 +77,31 @@ describe('the page1 reducer', () => {
         loading: false,
         error: null,
         data: { a: 1 },
+        dataAlreadyLoaded: 'no',
+      });
+    });
+  });
+
+  describe('when data is loaded', () => {
+    beforeEach(() => {
+      state = {
+        loading: false,
+        error: null,
+        data: { a: 1 },
+        dataAlreadyLoaded: 'no',
+      };
+    });
+
+    it('should handle PAGE_1_DATA_ALREADY_LOADED', () => {
+      should(
+        reducer(state, {
+          type: types.PAGE_1_DATA_ALREADY_LOADED,
+        }),
+      ).deepEqual({
+        loading: false,
+        error: null,
+        data: { a: 1 },
+        dataAlreadyLoaded: 'yes',
       });
     });
   });
