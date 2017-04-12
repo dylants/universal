@@ -9,9 +9,6 @@ import { renderToString } from 'react-dom/server';
 import configureStore from '../config/store';
 import { routes } from '../routes/react-routes';
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
-const IS_PRODUCTION = process.env.NODE_ENV === 'production';
-
 export default function render(req, res, next) {
   // create a new history and redux store on each (server side) request
   const history = createMemoryHistory(req.url);
@@ -43,17 +40,8 @@ export default function render(req, res, next) {
       // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
       const reduxState = JSON.stringify(store.getState()).replace(/</g, '\\u003c');
 
-      // determine the bundle names based on the environment
-      const webpackBundleName = IS_DEVELOPMENT ? 'main.js' : 'main.min.js';
-      const webpackVendorBundleName = IS_DEVELOPMENT ? 'vendor.js' : 'vendor.min.js';
-      // the css file is only available in production
-      const stylesBundleName = IS_PRODUCTION && 'main.min.css';
-
       // return the rendered index page with included HTML content and redux state
       return res.render('index', {
-        webpackBundleName,
-        webpackVendorBundleName,
-        stylesBundleName,
         reduxState,
         htmlContent,
       });

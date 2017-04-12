@@ -22,10 +22,14 @@ app.use(bodyParser.json());
  * ------------------------------------------ */
 
 // use handlebars as the html engine renderer
-app.engine('html', consolidate.handlebars);
-app.set('view engine', 'html');
-// set this location explicitly (for both development and production)
-app.set('views', path.join(APP_ROOT, 'app', 'views'));
+app.engine('hbs', consolidate.handlebars);
+app.set('view engine', 'hbs');
+/*
+ * Notice that the views is set within the 'build' directory. This
+ * was done to use the files that have been processed by Webpack
+ * (which occurs in both the development and production environments).
+ */
+app.set('views', path.join(APP_ROOT, 'build', 'views'));
 
 // this is required to get babel (server side) to process css-modules
 hook({

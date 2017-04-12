@@ -1,24 +1,52 @@
 // We need to 'use strict' here because this file isn't compiled with babel
 'use strict'; // eslint-disable-line strict, lines-around-directive
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const path = require('path');
 const webpack = require('webpack');
+
 const config = require('./app/config');
 
 const appPath = path.join(__dirname, 'app');
+const buildPath = path.join(__dirname, 'build');
 const assetsPath = path.join(__dirname, 'public');
 const publicPath = '/';
 
 function getPlugins() {
   return [
+    // https://github.com/jantimon/html-webpack-plugin
+    new HtmlWebpackPlugin({
+      alwaysWriteToDisk: true,
+      filename: 'index.hbs',
+      inject: 'body',
+      template: path.join(appPath, 'views', 'index.hbs'),
+    }),
+
+    // https://github.com/jantimon/html-webpack-harddisk-plugin
+    // used because of webpack dev middleware
+    new HtmlWebpackHarddiskPlugin({
+      // set the output to the build directory
+      outputPath: path.join(buildPath, 'views'),
+    }),
+
+    // https://webpack.js.org/plugins/define-plugin
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
 
-    // https://webpack.js.org/guides/code-splitting-libraries/#implicit-common-vendor-chunk
+    // https://webpack.js.org/plugins/commons-chunk-plugin
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
+      // https://webpack.js.org/guides/code-splitting-libraries/#implicit-common-vendor-chunk
       minChunks: module => module.context && module.context.indexOf('node_modules') !== -1,
+    }),
+
+    // https://webpack.js.org/plugins/commons-chunk-plugin
+    new webpack.optimize.CommonsChunkPlugin({
+      // https://webpack.js.org/plugins/commons-chunk-plugin/#manifest-file
+      name: 'manifest',
+      minChunks: Infinity,
     }),
 
     // https://github.com/glenjamin/webpack-hot-middleware
