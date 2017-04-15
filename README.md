@@ -27,6 +27,9 @@ An example container (`app/containers/page1/page1.container.js`) requires some d
 
 CSS modules are used within the React components/containers. Since both the server and the client must generate the same `localIdentName` used within CSS modules, a deterministic pattern is used. This includes the `[name]` and `[local]` keys (but not the `[hash]` since it uses the path which changes based on client/server environments because of the build). This should be unique within the scope of the application as long as the names of components and containers are unique.
 
+Additional information can be found here:
+https://blog.dylants.com/posts/20170415/universal-isomorphic-web-app
+
 ## Getting Started ##
 
 Install Node (I recommend [nvm](https://github.com/creationix/nvm)), clone the repository, and install the dependencies:
