@@ -35,7 +35,7 @@ https://blog.dylants.com/posts/20170415/universal-isomorphic-web-app
 Install Node (I recommend [nvm](https://github.com/creationix/nvm)), clone the repository, and install the dependencies:
 
 ```
-$ npm install
+$ yarn   // or `npm install` if you'd rather
 ```
 
 To start the application (in `development`) mode, run the following command:

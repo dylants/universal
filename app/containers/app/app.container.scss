@@ -1,5 +1,10 @@
 @import '../../theme/resets.scss';
 
 body {
+  margin: 8px;
+}
+
+body,
+input {
   font-family: 'Roboto', sans-serif;
 }
