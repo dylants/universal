@@ -1,20 +1,20 @@
 import configureMockStore from 'redux-mock-store';
-import proxyquire from 'proxyquire';
-import should from 'should';
 import thunk from 'redux-thunk';
 import * as types from '../../../app/constants/action-types';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
+const HTTP_LIB_PATH = '../../../app/lib/http';
 const MODULE_PATH = '../../../app/actions/page.actions';
 
 function mockActions(localRequest) {
-  return proxyquire(MODULE_PATH, {
-    '../lib/http': {
-      localRequest,
-    },
-  });
+  const httpLib = require(HTTP_LIB_PATH);
+  jest.resetModules();
+  jest.setMock(HTTP_LIB_PATH, ({
+    ...httpLib,
+    localRequest,
+  }));
 }
 
 describe('page actions', () => {
@@ -35,7 +35,7 @@ describe('page actions', () => {
 
     describe('when the status is 200', () => {
       beforeEach(() => {
-        pageActions = mockActions(() =>
+        mockActions(() =>
           new Promise(resolve => resolve({
             status: 200,
             json: () => ({
@@ -43,24 +43,23 @@ describe('page actions', () => {
             }),
           })),
         );
+        pageActions = require(MODULE_PATH);
       });
 
       describe('when data does not already exist', () => {
-        it('should dispatch properly', (done) => {
+        it('should dispatch properly', () =>
           store.dispatch(pageActions.loadPage1Data())
           .then(() => {
             const actions = store.getActions();
-            should(actions.length).equal(2);
-            should(actions).deepEqual([{
+            expect(actions.length).toBe(2);
+            expect(actions).toEqual([{
               type: types.LOADING_PAGE_1_DATA,
             }, {
               type: types.PAGE_1_DATA_LOADED,
               data: { page: 1 },
             }]);
-          })
-          .then(done)
-          .catch(done);
-        });
+          }),
+        );
       });
 
       describe('when data already exists', () => {
@@ -72,43 +71,43 @@ describe('page actions', () => {
           });
         });
 
-        it('should dispatch properly', (done) => {
+        it('should dispatch properly', () =>
           store.dispatch(pageActions.loadPage1Data())
           .then(() => {
             const actions = store.getActions();
-            should(actions.length).equal(1);
-            should(actions).deepEqual([{
+            expect(actions.length).toBe(1);
+            expect(actions).toEqual([{
               type: types.PAGE_1_DATA_ALREADY_LOADED,
             }]);
-          })
-          .then(done)
-          .catch(done);
-        });
+          }),
+        );
       });
     });
 
     describe('when the status is 500', () => {
       beforeEach(() => {
-        pageActions = mockActions(() =>
+        mockActions(() =>
           new Promise(resolve => resolve({
             status: 500,
+            json: () => ({
+              error: 'bad',
+            }),
           })),
         );
+        pageActions = require(MODULE_PATH);
       });
 
-      it('should dispatch properly', (done) => {
+      it('should dispatch properly', () =>
         store.dispatch(pageActions.loadPage1Data())
         .then(() => {
           const actions = store.getActions();
-          should(actions.length).equal(2);
-          should(actions[0]).deepEqual({
+          expect(actions.length).toBe(2);
+          expect(actions[0]).toEqual({
             type: types.LOADING_PAGE_1_DATA,
           });
-          should(actions[1].type).equal(types.LOADING_PAGE_1_DATA_ERROR);
-        })
-        .then(done)
-        .catch(done);
-      });
+          expect(actions[1].type).toBe(types.LOADING_PAGE_1_DATA_ERROR);
+        }),
+      );
     });
   });
 
@@ -119,15 +118,13 @@ describe('page actions', () => {
       store = mockStore();
     });
 
-    it('should dispatch properly', (done) => {
+    it('should dispatch properly', () =>
       store.dispatch(pageActions.dispatchToPage1())
       .then(() => {
         const actions = store.getActions();
-        should(actions.length).equal(1);
-        should(actions[0].payload.args).deepEqual(['/page1']);
-      })
-      .then(done)
-      .catch(done);
-    });
+        expect(actions.length).toBe(1);
+        expect(actions[0].payload.args).toEqual(['/page1']);
+      }),
+    );
   });
 });

@@ -1,6 +1,3 @@
-import proxyquire from 'proxyquire';
-import should from 'should';
-
 import config from '../../../app/config';
 
 const MODULE_PATH = '../../../app/lib/http';
@@ -13,7 +10,7 @@ describe('Http library', () => {
   });
 
   it('should exist', () => {
-    should.exist(httpLib);
+    expect(httpLib).toBeDefined();
   });
 
   describe('checkHttpStatus', () => {
@@ -31,7 +28,7 @@ describe('Http library', () => {
       });
 
       it('should return the response', () => {
-        should(httpLib.checkHttpStatus(response)).deepEqual(response);
+        expect(httpLib.checkHttpStatus(response)).toEqual(response);
       });
     });
 
@@ -41,7 +38,7 @@ describe('Http library', () => {
       });
 
       it('should throw an error', () => {
-        should.throws(() => httpLib.checkHttpStatus(response));
+        expect(() => httpLib.checkHttpStatus(response)).toThrow();
       });
     });
   });
@@ -71,8 +68,8 @@ describe('Http library', () => {
 
       it('should send to login', () => {
         httpLib.handleHttpError(dispatch, error, errorAction);
-        should(dispatchResult).be.ok();
-        should(dispatchResult.payload.args).deepEqual(['/']);
+        expect(dispatchResult).toBeTruthy();
+        expect(dispatchResult.payload.args).toEqual(['/']);
       });
     });
 
@@ -83,8 +80,8 @@ describe('Http library', () => {
 
       it('should send to login', () => {
         httpLib.handleHttpError(dispatch, error, errorAction);
-        should(dispatchResult).be.ok();
-        should(dispatchResult).equal(error);
+        expect(dispatchResult).toBeTruthy();
+        expect(dispatchResult).toBe(error);
       });
 
       describe('when there are more arguments supplied', () => {
@@ -99,8 +96,8 @@ describe('Http library', () => {
 
         it('should send the arguments', () => {
           httpLib.handleHttpError(dispatch, error, errorAction, '1', 2);
-          should(dispatchResult).be.ok();
-          should(dispatchResult).deepEqual({
+          expect(dispatchResult).toBeTruthy();
+          expect(dispatchResult).toEqual({
             err: error,
             x: '1',
             y: 2,
@@ -116,19 +113,19 @@ describe('Http library', () => {
     let options;
 
     beforeEach(() => {
-      httpLib = proxyquire(MODULE_PATH, {
-        'isomorphic-fetch': (_url, _options) => {
-          url = _url;
-          options = _options;
-        },
+      jest.resetModules();
+      jest.setMock('isomorphic-fetch', (_url, _options) => {
+        url = _url;
+        options = _options;
       });
+      httpLib = require(MODULE_PATH);
     });
 
     describe('when the window does not exist (server)', () => {
       it('should work', () => {
         httpLib.localRequest('/a/b', { a: 1 });
-        should(url).equal(`http://localhost:${config.port}/a/b`);
-        should(options).deepEqual({ a: 1 });
+        expect(url).toBe(`http://localhost:${config.port}/a/b`);
+        expect(options).toEqual({ a: 1 });
       });
     });
 
@@ -146,8 +143,8 @@ describe('Http library', () => {
 
       it('should work', () => {
         httpLib.localRequest('/a/b', { a: 1 });
-        should(url).equal('/a/b');
-        should(options).deepEqual({ a: 1 });
+        expect(url).toBe('/a/b');
+        expect(options).toEqual({ a: 1 });
       });
     });
   });

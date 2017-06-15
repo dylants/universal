@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The Header component should render correctly 1`] = `
+<header>
+  <div
+    className="links"
+  >
+    <a
+      href="/"
+      onClick={[Function]}
+    >
+      Home
+    </a>
+    <a
+      href="/page1"
+      onClick={[Function]}
+    >
+      Page 1
+    </a>
+    <a
+      href="/page2"
+      onClick={[Function]}
+    >
+      Page 2
+    </a>
+  </div>
+</header>
+`;

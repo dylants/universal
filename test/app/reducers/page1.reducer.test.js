@@ -1,5 +1,3 @@
-import should from 'should';
-
 import reducer from '../../../app/reducers/page1.reducer';
 import * as types from '../../../app/constants/action-types';
 
@@ -7,11 +5,11 @@ describe('the page1 reducer', () => {
   let state;
 
   it('should exist', () => {
-    should.exist(reducer);
+    expect(reducer).toBeDefined();
   });
 
   it('should have the correct initial state', () => {
-    should(reducer(undefined, {})).deepEqual({
+    expect(reducer(undefined, {})).toEqual({
       loading: true,
       error: null,
       data: null,
@@ -30,11 +28,11 @@ describe('the page1 reducer', () => {
     });
 
     it('should handle LOADING_PAGE_1_DATA', () => {
-      should(
+      expect(
         reducer(state, {
           type: types.LOADING_PAGE_1_DATA,
         }),
-      ).deepEqual({
+      ).toEqual({
         loading: true,
         error: null,
         data: null,
@@ -54,12 +52,12 @@ describe('the page1 reducer', () => {
     });
 
     it('should handle LOADING_PAGE_1_DATA_ERROR', () => {
-      should(
+      expect(
         reducer(state, {
           type: types.LOADING_PAGE_1_DATA_ERROR,
           error: 'bad',
         }),
-      ).deepEqual({
+      ).toEqual({
         loading: false,
         error: 'bad',
         data: null,
@@ -68,12 +66,12 @@ describe('the page1 reducer', () => {
     });
 
     it('should handle PAGE_1_DATA_LOADED', () => {
-      should(
+      expect(
         reducer(state, {
           type: types.PAGE_1_DATA_LOADED,
           data: { a: 1 },
         }),
-      ).deepEqual({
+      ).toEqual({
         loading: false,
         error: null,
         data: { a: 1 },
@@ -93,11 +91,11 @@ describe('the page1 reducer', () => {
     });
 
     it('should handle PAGE_1_DATA_ALREADY_LOADED', () => {
-      should(
+      expect(
         reducer(state, {
           type: types.PAGE_1_DATA_ALREADY_LOADED,
         }),
-      ).deepEqual({
+      ).toEqual({
         loading: false,
         error: null,
         data: { a: 1 },

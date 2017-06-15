@@ -1,5 +1,3 @@
-import should from 'should';
-
 describe('The logger library', () => {
   let logger;
 
@@ -8,13 +6,13 @@ describe('The logger library', () => {
   });
 
   it('should exist', () => {
-    should.exist(logger);
+    expect(logger).toBeDefined();
   });
 
   it('should return a log and error function for logger', () => {
     const myLogger = logger();
 
-    should.exist(myLogger.log);
-    should.exist(myLogger.error);
+    expect(myLogger.log).toBeDefined();
+    expect(myLogger.error).toBeDefined();
   });
 });
