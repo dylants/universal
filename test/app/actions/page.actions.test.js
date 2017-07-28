@@ -2,19 +2,15 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as types from '../../../app/constants/action-types';
 
+const httpLib = require('../../../app/lib/http');
+
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-const HTTP_LIB_PATH = '../../../app/lib/http';
 const MODULE_PATH = '../../../app/actions/page.actions';
 
 function mockActions(localRequest) {
-  const httpLib = require(HTTP_LIB_PATH);
-  jest.resetModules();
-  jest.setMock(HTTP_LIB_PATH, ({
-    ...httpLib,
-    localRequest,
-  }));
+  httpLib.localRequest = jest.fn(localRequest);
 }
 
 describe('page actions', () => {
