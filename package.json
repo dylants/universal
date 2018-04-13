@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "engines": {
-    "node": "6.x"
+    "node": ">=6.x"
   },
   "scripts": {
     "build:client": "NODE_ENV=production webpack --config ./webpack.config.production.js --progress --profile --colors --optimize-minimize",
@@ -18,7 +18,7 @@
     "lint:eslint": "eslint .",
     "lint:sass-lint": "sass-lint -c ./.sass-lint.yml './app/**/*.scss' -v",
     "lint": "npm run lint:eslint && npm run lint:sass-lint",
-    "production-build": "npm run build && npm run clean:node_modules && npm install --production",
+    "production-build": "npm run build && npm run clean:node_modules && yarn install --production",
     "production": "NODE_ENV=production node ./build/config/server.js",
     "reinstall": "npm run clean && npm install",
     "start": "./node_modules/.bin/nodemon --exec NODE_ENV=development ./node_modules/.bin/babel-node ./app/config/server.js",
